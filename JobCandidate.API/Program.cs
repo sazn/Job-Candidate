@@ -1,5 +1,7 @@
 using JobCandidate.ORM.Abstractions.UnitOfWorkPattern;
 using JobCandidate.ORM.Context;
+using JobCandidate.Service.Interfaces;
+using JobCandidate.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ builder.Services.AddDbContext<JobCandidateDbContext>
             builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICandidateService, CandidateService>();
 
 // Add services to the container.
 
