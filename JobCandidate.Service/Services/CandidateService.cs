@@ -1,4 +1,5 @@
 ﻿using JobCandidate.Domain.DomainClasses;
+using JobCandidate.Domain.Helpers;
 using JobCandidate.ORM.Abstractions.RepositoryPattern;
 using JobCandidate.ORM.Abstractions.UnitOfWorkPattern;
 using JobCandidate.Service.Interfaces;
@@ -20,6 +21,13 @@ namespace JobCandidate.Service.Services
         {
             var existingCandidate = (await _candidateRepository.GetAllAsync())
                 .FirstOrDefault(c => c.Email == candidate.Email);
+
+            bool isValid = CustomEmailValidation.IsValidEmail(candidate.Email);
+
+            if (!isValid)
+            {
+                throw new ArgumentException("Invalid email address format.");
+            }
 
             if (existingCandidate != null)
             {

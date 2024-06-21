@@ -26,8 +26,18 @@ var app = builder.Build();
 // Apply migrations and update the database
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<JobCandidateDbContext>();
-    dbContext.Database.Migrate();
+    var service = scope.ServiceProvider;
+    var loggerFactory = service.GetRequiredService<ILoggerFactory>();
+    try
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<JobCandidateDbContext>();
+        dbContext.Database.Migrate();
+    }
+    catch(Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "An error occured during migration");
+    }
 }
 
 // Configure the HTTP request pipeline.
